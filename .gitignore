@@ -14,3 +14,9 @@ test/tmp
 *.war
 *.ear
 /bin
+
+# Rust Build Artifacts #
+rust-client/target
+rust-client/Cargo.lock
+rust-server/target
+rust-server/Cargo.lock
