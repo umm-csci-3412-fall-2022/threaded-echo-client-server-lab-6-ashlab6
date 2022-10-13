@@ -1,5 +1,4 @@
 use std::net::TcpStream;
-use std::net::TcpListener;
 
 use std::thread;
 
@@ -49,7 +48,6 @@ fn receiving_handler(mut stream: TcpStream) {
     }
 }
 
-
 fn main() {
     let port = 6013;
     let address = format!("127.0.0.1:{}", port);
@@ -57,7 +55,7 @@ fn main() {
     println!("Attempting to connect to server at {}", address);
 
     match TcpStream::connect(&address) {
-        Ok(mut stream) => {
+        Ok(stream) => {
 
             let stream_read = stream.try_clone().unwrap();
             let stream_write = stream;
@@ -65,8 +63,8 @@ fn main() {
             let sending_handle = thread::spawn(move || sending_handler(stream_write));
             let receiving_handle = thread::spawn(move || receiving_handler(stream_read));
             
-            receiving_handle.join();
-            sending_handle.join();
+            if receiving_handle.join().is_err() { println!("receiving thread failed") }
+            if sending_handle.join().is_err() { println!("receiving thread failed") }
         }
         Err(e) => println!("unable to connect: {}", e)
     }
